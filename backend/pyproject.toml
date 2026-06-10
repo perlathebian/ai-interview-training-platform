@@ -1,0 +1,5 @@
+[project]
+name = "ai-interview-training-backend"
+version = "0.1.0"
+description = "FastAPI backend for the AI Interview Training Platform"
+requires-python = ">=3.11"
