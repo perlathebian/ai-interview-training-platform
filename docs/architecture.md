@@ -50,3 +50,22 @@ The AI layer uses specialized agents:
 - Report Agent
 
 Each agent should return structured JSON validated by Pydantic.
+
+# Development Stage
+
+Current Phase:
+
+Week 1 - Foundation
+
+Implemented:
+
+- FastAPI backend
+- React frontend
+- PostgreSQL container
+- Docker Compose environment
+
+Next:
+
+- Authentication
+- Database models
+- Interview engine
