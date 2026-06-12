@@ -28,6 +28,8 @@ export default function LoginPage() {
         },
       });
 
+      console.log("LOGIN RESPONSE:", response.data);
+
       localStorage.setItem("access_token", response.data.access_token);
 
       navigate("/dashboard");
