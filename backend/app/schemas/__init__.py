@@ -15,7 +15,9 @@ from app.schemas.training_target import (
     TrainingTargetUpdate,
 )
 from app.schemas.user import (
+    TokenResponse,
     UserCreate,
+    UserLogin,
     UserResponse,
     UserUpdate,
 )

@@ -10,6 +10,11 @@ class UserCreate(BaseModel):
     level: str | None = None
 
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
 class UserUpdate(BaseModel):
     specialty: str | None = None
     level: str | None = None
@@ -27,3 +32,8 @@ class UserResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
