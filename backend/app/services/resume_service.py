@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.models.resume import Resume
 from app.schemas.resume import ResumeCreate, ResumeUpdate
-
+from app.services.resume_parser import resume_parser
 
 class ResumeService:
     def create_resume(self, db: Session, user_id: int, resume_data: ResumeCreate) -> Resume:
@@ -11,9 +11,16 @@ class ResumeService:
         if existing_active_resume:
             existing_active_resume.is_active = False
 
+        parsed_resume = resume_parser.parse(resume_data.raw_text)
+
         resume = Resume(
             user_id=user_id,
             raw_text=resume_data.raw_text,
+            parsed_summary=parsed_resume["parsed_summary"],
+            extracted_skills=parsed_resume["extracted_skills"],
+            extracted_projects=parsed_resume["extracted_projects"],
+            extracted_experience=parsed_resume["extracted_experience"],
+            extracted_education=parsed_resume["extracted_education"],
             is_active=True,
             is_deleted=False,
         )
@@ -58,7 +65,14 @@ class ResumeService:
         resume_data: ResumeUpdate,
     ) -> Resume:
         if resume_data.raw_text is not None:
+            parsed_resume = resume_parser.parse(resume_data.raw_text)
+
             resume.raw_text = resume_data.raw_text
+            resume.parsed_summary = parsed_resume["parsed_summary"]
+            resume.extracted_skills = parsed_resume["extracted_skills"]
+            resume.extracted_projects = parsed_resume["extracted_projects"]
+            resume.extracted_experience = parsed_resume["extracted_experience"]
+            resume.extracted_education = parsed_resume["extracted_education"]
 
         db.commit()
         db.refresh(resume)
