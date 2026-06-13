@@ -6,9 +6,16 @@ from app.schemas.resume import ResumeCreate, ResumeUpdate
 
 class ResumeService:
     def create_resume(self, db: Session, user_id: int, resume_data: ResumeCreate) -> Resume:
+        existing_active_resume = self.get_active_resume_for_user(db, user_id)
+
+        if existing_active_resume:
+            existing_active_resume.is_active = False
+
         resume = Resume(
             user_id=user_id,
             raw_text=resume_data.raw_text,
+            is_active=True,
+            is_deleted=False,
         )
 
         db.add(resume)
@@ -26,6 +33,21 @@ class ResumeService:
                 Resume.is_deleted.is_(False),
             )
             .order_by(Resume.created_at.desc())
+            .first()
+        )
+
+    def get_resume_for_user(
+        self,
+        db: Session,
+        resume_id: int,
+        user_id: int,
+    ) -> Resume | None:
+        return (
+            db.query(Resume)
+            .filter(
+                Resume.id == resume_id,
+                Resume.user_id == user_id,
+            )
             .first()
         )
 
