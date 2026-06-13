@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../hooks/useAuth";
 
@@ -26,6 +26,12 @@ export default function DashboardPage() {
           <p>Level: {user.level || "Not set"}</p>
         </section>
       )}
+
+      <nav>
+        <Link to="/resume">Manage Resume</Link>
+        {" | "}
+        <Link to="/training-targets">Training Targets</Link>
+      </nav>
 
       <button onClick={handleLogout}>Logout</button>
     </main>

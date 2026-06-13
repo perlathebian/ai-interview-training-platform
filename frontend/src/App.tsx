@@ -6,6 +6,9 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import ResumePage from "./pages/ResumePage";
+import NewTrainingTargetPage from "./pages/NewTrainingTargetPage";
+import TrainingTargetsPage from "./pages/TrainingTargetsPage";
 
 function App() {
   return (
@@ -20,6 +23,33 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/resume"
+          element={
+            <ProtectedRoute>
+              <ResumePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/training-targets"
+          element={
+            <ProtectedRoute>
+              <TrainingTargetsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/training-targets/new"
+          element={
+            <ProtectedRoute>
+              <NewTrainingTargetPage />
             </ProtectedRoute>
           }
         />
