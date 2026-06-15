@@ -15,6 +15,7 @@ class InterviewService:
         training_target: TrainingTarget,
         resume_snapshot: dict | None = None,
         job_snapshot: dict | None = None,
+        research_snapshot: dict | None = None,
         interview_plan_snapshot: dict | None = None,
     ) -> InterviewSession:
         session = InterviewSession(
@@ -24,6 +25,7 @@ class InterviewService:
             status="in_progress",
             resume_snapshot=resume_snapshot,
             job_snapshot=job_snapshot,
+            research_snapshot=research_snapshot,
             interview_plan_snapshot=interview_plan_snapshot,
         )
 
@@ -39,12 +41,14 @@ class InterviewService:
         session_id: int,
         turn_number: int,
         question: str,
+        turn_metadata: dict | None = None,
     ) -> InterviewTurn:
         turn = InterviewTurn(
             session_id=session_id,
             turn_number=turn_number,
             question=question,
             status="question_asked",
+            turn_metadata=turn_metadata,
         )
 
         db.add(turn)

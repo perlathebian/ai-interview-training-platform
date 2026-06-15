@@ -1,6 +1,7 @@
 from app.schemas.interview import (
     InterviewSessionCreate,
     InterviewSessionResponse,
+    InterviewStartResponse,
     InterviewTurnCreate,
     InterviewTurnResponse,
 )
