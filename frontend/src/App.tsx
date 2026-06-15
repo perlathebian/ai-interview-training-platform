@@ -9,6 +9,8 @@ import DashboardPage from "./pages/DashboardPage";
 import ResumePage from "./pages/ResumePage";
 import NewTrainingTargetPage from "./pages/NewTrainingTargetPage";
 import TrainingTargetsPage from "./pages/TrainingTargetsPage";
+import NewInterviewPage from "./pages/NewInterviewPage";
+import InterviewPage from "./pages/InterviewPage";
 
 function App() {
   return (
@@ -50,6 +52,24 @@ function App() {
           element={
             <ProtectedRoute>
               <NewTrainingTargetPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interviews/new"
+          element={
+            <ProtectedRoute>
+              <NewInterviewPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interviews/:id"
+          element={
+            <ProtectedRoute>
+              <InterviewPage />
             </ProtectedRoute>
           }
         />
