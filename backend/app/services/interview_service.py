@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from datetime import datetime, timezone
 
 from app.models.interview_session import InterviewSession
 from app.models.interview_turn import InterviewTurn
@@ -71,6 +72,53 @@ class InterviewService:
             )
             .first()
         )
+    
+    def get_latest_unanswered_turn(
+        self,
+        db: Session,
+        session_id: int,
+    ) -> InterviewTurn | None:
+        return (
+            db.query(InterviewTurn)
+            .filter(
+                InterviewTurn.session_id == session_id,
+                InterviewTurn.answer.is_(None),
+            )
+            .order_by(InterviewTurn.turn_number.desc())
+            .first()
+        )
+
+    def get_turns_for_session(
+        self,
+        db: Session,
+        session_id: int,
+    ) -> list[InterviewTurn]:
+        return (
+            db.query(InterviewTurn)
+            .filter(InterviewTurn.session_id == session_id)
+            .order_by(InterviewTurn.turn_number.asc())
+            .all()
+        )
+
+    def save_answer_and_feedback(
+        self,
+        db: Session,
+        turn: InterviewTurn,
+        answer: str,
+        evaluation: dict,
+        coaching: dict,
+    ) -> InterviewTurn:
+        turn.answer = answer
+        turn.evaluation = evaluation
+        turn.coaching = coaching
+        turn.score = evaluation.get("score")
+        turn.status = "completed"
+        turn.answered_at = datetime.now(timezone.utc)
+
+        db.commit()
+        db.refresh(turn)
+
+        return turn
 
 
 interview_service = InterviewService()

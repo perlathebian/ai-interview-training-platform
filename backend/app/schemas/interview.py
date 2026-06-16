@@ -43,3 +43,11 @@ class InterviewTurnResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class InterviewAnswerSubmit(BaseModel):
+    answer: str
+
+class InterviewAnswerResponse(BaseModel):
+    evaluation: dict
+    coaching: dict
+    next_question: str
