@@ -200,6 +200,8 @@ def submit_answer(
             "question": turn.question,
             "answer": turn.answer,
             "score": turn.score,
+            "evaluation": turn.evaluation,
+            "weaknesses": (turn.evaluation or {}).get("weaknesses", []),
             "focus_area": (turn.turn_metadata or {}).get("focus_area"),
         }
         for turn in turns

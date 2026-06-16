@@ -37,21 +37,22 @@ class InterviewerAgent:
         question_strategy = interview_plan.get("question_strategy") or []
 
         turn_count = len(previous_turns)
-        next_turn_number = turn_count + 1
-
         last_turn = previous_turns[-1] if previous_turns else None
 
-        if last_turn and self._answer_was_weak(last_turn):
-            question = self._build_follow_up_question(last_turn)
-            return {
-                "question": question,
-                "difficulty": "medium",
-                "focus_area": last_turn.get("focus_area", "follow-up"),
-                "question_type": "adaptive_follow_up",
-                "reason": "Previous answer looked weak or too short.",
-            }
+        if last_turn:
+            adaptive_question = self._try_generate_adaptive_follow_up(
+                last_turn=last_turn,
+                role=role,
+            )
 
-        focus_area = focus_areas[turn_count % len(focus_areas)]
+            if adaptive_question:
+                return adaptive_question
+
+        focus_area = self._select_next_focus_area(
+            focus_areas=focus_areas,
+            previous_turns=previous_turns,
+        )
+
         strategy_stage = self._get_strategy_stage(
             question_strategy=question_strategy,
             turn_count=turn_count,
@@ -61,7 +62,6 @@ class InterviewerAgent:
             role=role,
             focus_area=focus_area,
             strategy_stage=strategy_stage,
-            next_turn_number=next_turn_number,
         )
 
         return {
@@ -69,28 +69,87 @@ class InterviewerAgent:
             "difficulty": interview_plan.get("difficulty", "mid"),
             "focus_area": focus_area,
             "question_type": strategy_stage.get("question_type", "role_specific"),
-            "reason": "Generated from interview plan focus areas.",
+            "reason": "Generated from interview plan and uncovered focus areas.",
         }
 
-    def _answer_was_weak(self, turn: dict) -> bool:
-        answer = turn.get("answer") or ""
-        score = turn.get("score")
+    def _try_generate_adaptive_follow_up(
+        self,
+        last_turn: dict,
+        role: str,
+    ) -> dict | None:
+        score = last_turn.get("score")
+        weaknesses = last_turn.get("weaknesses") or []
+        answer = last_turn.get("answer") or ""
+        focus_area = last_turn.get("focus_area") or "that topic"
 
         if score is not None and score < 5:
-            return True
+            return {
+                "question": (
+                    f"Your previous answer needed more depth. Can you give a specific example related to "
+                    f"{focus_area}, including your role, the technical decisions you made, and the outcome?"
+                ),
+                "difficulty": "medium",
+                "focus_area": focus_area,
+                "question_type": "adaptive_follow_up",
+                "reason": "Previous answer received a low score.",
+            }
+
+        weakness_text = " ".join(weaknesses).lower()
+
+        if "technical" in weakness_text or "tradeoff" in weakness_text:
+            return {
+                "question": (
+                    f"Let's go deeper technically. For the {role} role, describe a technical decision "
+                    f"you made related to {focus_area}. What alternatives did you consider and why?"
+                ),
+                "difficulty": "medium",
+                "focus_area": focus_area,
+                "question_type": "technical_follow_up",
+                "reason": "Evaluation identified weak technical depth or missing tradeoffs.",
+            }
+
+        if "specific" in weakness_text or "examples" in weakness_text or "outcomes" in weakness_text:
+            return {
+                "question": (
+                    f"Can you give a more concrete example related to {focus_area}? "
+                    "Please include the situation, your actions, tools used, and measurable result."
+                ),
+                "difficulty": "medium",
+                "focus_area": focus_area,
+                "question_type": "specificity_follow_up",
+                "reason": "Evaluation identified lack of specificity.",
+            }
 
         if len(answer.strip().split()) < 25:
-            return True
+            return {
+                "question": (
+                    f"Can you expand your previous answer with a real example related to {focus_area}? "
+                    "Focus on what you personally did and what changed because of your work."
+                ),
+                "difficulty": "easy",
+                "focus_area": focus_area,
+                "question_type": "clarification_follow_up",
+                "reason": "Previous answer was too short.",
+            }
 
-        return False
+        return None
 
-    def _build_follow_up_question(self, last_turn: dict) -> str:
-        focus_area = last_turn.get("focus_area", "that topic")
+    def _select_next_focus_area(
+        self,
+        focus_areas: list[str],
+        previous_turns: list[dict],
+    ) -> str:
+        used_focus_areas = [
+            turn.get("focus_area")
+            for turn in previous_turns
+            if turn.get("focus_area")
+        ]
 
-        return (
-            f"Can you give a more specific example related to {focus_area}, "
-            "including what you did, what tradeoffs you considered, and what the outcome was?"
-        )
+        for focus_area in focus_areas:
+            if focus_area not in used_focus_areas:
+                return focus_area
+
+        return focus_areas[len(previous_turns) % len(focus_areas)]
 
     def _get_strategy_stage(
         self,
@@ -111,7 +170,6 @@ class InterviewerAgent:
         role: str,
         focus_area: str,
         strategy_stage: dict,
-        next_turn_number: int,
     ) -> str:
         question_type = strategy_stage.get("question_type", "role_specific")
 
