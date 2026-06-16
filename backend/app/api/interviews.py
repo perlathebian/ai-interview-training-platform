@@ -165,8 +165,9 @@ def submit_answer(
         )
 
         coaching = coach_agent.coach(
-            answer=answer_data.answer,
-            evaluation=evaluation,
+        question=current_turn.question,
+        answer=answer_data.answer,
+        evaluation=evaluation,
         )
 
         interview_service.save_answer_and_feedback(
