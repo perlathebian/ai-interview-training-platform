@@ -120,5 +120,31 @@ class InterviewService:
 
         return turn
 
+    def save_answer_as_pending(
+        self,
+        db: Session,
+        turn: InterviewTurn,
+        answer: str,
+    ) -> InterviewTurn:
+        turn.answer = answer
+        turn.status = "pending_evaluation"
+        turn.answered_at = datetime.now(timezone.utc)
+
+        db.commit()
+        db.refresh(turn)
+
+        return turn
+    
+    def mark_turn_evaluation_failed(
+        self,
+        db: Session,
+        turn: InterviewTurn,
+    ) -> InterviewTurn:
+        turn.status = "evaluation_failed"
+
+        db.commit()
+        db.refresh(turn)
+
+        return turn
 
 interview_service = InterviewService()

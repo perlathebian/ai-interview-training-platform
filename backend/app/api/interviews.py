@@ -152,23 +152,41 @@ def submit_answer(
             detail="No unanswered question found for this session",
         )
 
-    evaluation = evaluator_agent.evaluate(
-        question=current_turn.question,
-        answer=answer_data.answer,
+    interview_service.save_answer_as_pending(
+    db=db,
+    turn=current_turn,
+    answer=answer_data.answer,
     )
 
-    coaching = coach_agent.coach(
-        answer=answer_data.answer,
-        evaluation=evaluation,
-    )
+    try:
+        evaluation = evaluator_agent.evaluate(
+            question=current_turn.question,
+            answer=answer_data.answer,
+        )
 
-    interview_service.save_answer_and_feedback(
-        db=db,
-        turn=current_turn,
-        answer=answer_data.answer,
-        evaluation=evaluation,
-        coaching=coaching,
-    )
+        coaching = coach_agent.coach(
+            answer=answer_data.answer,
+            evaluation=evaluation,
+        )
+
+        interview_service.save_answer_and_feedback(
+            db=db,
+            turn=current_turn,
+            answer=answer_data.answer,
+            evaluation=evaluation,
+            coaching=coaching,
+        )
+
+    except Exception:
+        interview_service.mark_turn_evaluation_failed(
+            db=db,
+            turn=current_turn,
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Answer was saved, but evaluation failed. Please retry later.",
+        )
 
     turns = interview_service.get_turns_for_session(
         db=db,
