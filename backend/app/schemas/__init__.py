@@ -4,6 +4,8 @@ from app.schemas.interview import (
     InterviewStartResponse,
     InterviewTurnCreate,
     InterviewTurnResponse,
+    InterviewSessionDetailResponse,
+    InterviewTurnDetailResponse,
 )
 from app.schemas.resume import (
     ResumeCreate,

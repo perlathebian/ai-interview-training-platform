@@ -9,6 +9,8 @@ from app.schemas.interview import (
     InterviewAnswerSubmit,
     InterviewSessionCreate,
     InterviewStartResponse,
+    InterviewSessionDetailResponse,
+    InterviewSessionResponse,
 )
 from app.services.agents import coach_agent, evaluator_agent, interviewer_agent, planner_agent, research_agent
 from app.services.interview_service import interview_service
@@ -118,6 +120,42 @@ def start_interview(
     )
 
 
+@router.get(
+    "",
+    response_model=list[InterviewSessionResponse],
+)
+def get_interviews(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return interview_service.get_sessions_for_user(
+        db=db,
+        user_id=current_user.id,
+    )
+
+
+@router.get(
+    "/{session_id}",
+    response_model=InterviewSessionDetailResponse,
+)
+def get_interview(
+    session_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    session = interview_service.get_session_for_user(
+        db=db,
+        session_id=session_id,
+        user_id=current_user.id,
+    )
+
+    if session is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Interview session not found",
+        )
+
+    return session
 
 @router.post(
     "/{session_id}/answer",

@@ -51,3 +51,40 @@ class InterviewAnswerResponse(BaseModel):
     evaluation: dict
     coaching: dict
     next_question: str
+
+class InterviewTurnDetailResponse(BaseModel):
+    id: int
+    turn_number: int
+    question: str
+    answer: str | None
+    evaluation: dict | None
+    coaching: dict | None
+    score: int | None
+    status: str
+    turn_metadata: dict | None
+    created_at: datetime
+    answered_at: datetime | None
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class InterviewSessionDetailResponse(BaseModel):
+    id: int
+    training_target_id: int
+    mode: str
+    status: str
+    resume_snapshot: dict | None
+    job_snapshot: dict | None
+    research_snapshot: dict | None
+    interview_plan_snapshot: dict | None
+    overall_score: int | None
+    final_report: dict | None
+    started_at: datetime
+    completed_at: datetime | None
+    turns: list[InterviewTurnDetailResponse]
+
+    model_config = {
+        "from_attributes": True
+    }

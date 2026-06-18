@@ -146,5 +146,17 @@ class InterviewService:
         db.refresh(turn)
 
         return turn
+    
+    def get_sessions_for_user(
+        self,
+        db: Session,
+        user_id: int,
+    ) -> list[InterviewSession]:
+        return (
+            db.query(InterviewSession)
+            .filter(InterviewSession.user_id == user_id)
+            .order_by(InterviewSession.started_at.desc())
+            .all()
+        )
 
 interview_service = InterviewService()

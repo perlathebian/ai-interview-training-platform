@@ -11,6 +11,8 @@ import NewTrainingTargetPage from "./pages/NewTrainingTargetPage";
 import TrainingTargetsPage from "./pages/TrainingTargetsPage";
 import NewInterviewPage from "./pages/NewInterviewPage";
 import InterviewPage from "./pages/InterviewPage";
+import InterviewHistoryPage from "./pages/InterviewHistoryPage";
+import InterviewReportPage from "./pages/InterviewReportPage";
 
 function App() {
   return (
@@ -70,6 +72,24 @@ function App() {
           element={
             <ProtectedRoute>
               <InterviewPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interviews/history"
+          element={
+            <ProtectedRoute>
+              <InterviewHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interviews/:id/report"
+          element={
+            <ProtectedRoute>
+              <InterviewReportPage />
             </ProtectedRoute>
           }
         />
