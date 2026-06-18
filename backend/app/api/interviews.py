@@ -11,11 +11,13 @@ from app.schemas.interview import (
     InterviewStartResponse,
     InterviewSessionDetailResponse,
     InterviewSessionResponse,
+    InterviewCompletionResponse,
 )
-from app.services.agents import coach_agent, evaluator_agent, interviewer_agent, planner_agent, research_agent
+from app.services.agents import coach_agent, evaluator_agent, interviewer_agent, planner_agent, research_agent, report_agent
 from app.services.interview_service import interview_service
 from app.services.resume_service import resume_service
 from app.services.training_target_service import training_target_service
+
 
 
 router = APIRouter(
@@ -271,4 +273,49 @@ def submit_answer(
         evaluation=evaluation,
         coaching=coaching,
         next_question=next_question_data["question"],
+    )
+
+
+@router.post(
+    "/{session_id}/complete",
+    response_model=InterviewCompletionResponse,
+)
+def complete_interview(
+    session_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    session = interview_service.get_session_for_user(
+        db=db,
+        session_id=session_id,
+        user_id=current_user.id,
+    )
+
+    if session is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Interview session not found",
+        )
+
+    turns = interview_service.get_turns_for_session(
+        db=db,
+        session_id=session.id,
+    )
+
+    report = report_agent.generate_report(
+        turns=turns,
+    )
+
+    interview_service.complete_session(
+        db=db,
+        session=session,
+        report=report,
+    )
+
+    return InterviewCompletionResponse(
+        overall_score=report["overall_score"],
+        strengths=report["strengths"],
+        weaknesses=report["weaknesses"],
+        recommended_focus=report["recommended_focus"],
+        summary=report["summary"],
     )

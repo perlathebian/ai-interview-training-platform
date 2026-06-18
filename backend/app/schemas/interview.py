@@ -88,3 +88,10 @@ class InterviewSessionDetailResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class InterviewCompletionResponse(BaseModel):
+    overall_score: int
+    strengths: list[str]
+    weaknesses: list[str]
+    recommended_focus: list[str]
+    summary: str

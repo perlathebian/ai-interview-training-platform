@@ -159,4 +159,21 @@ class InterviewService:
             .all()
         )
 
+    def complete_session(
+        self,
+        db: Session,
+        session: InterviewSession,
+        report: dict,
+    ) -> InterviewSession:
+        session.status = "completed"
+        session.completed_at = datetime.now(timezone.utc)
+
+        session.overall_score = report.get("overall_score")
+        session.final_report = report
+
+        db.commit()
+        db.refresh(session)
+
+        return session
+
 interview_service = InterviewService()
