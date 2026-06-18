@@ -17,6 +17,7 @@ from app.services.agents import coach_agent, evaluator_agent, interviewer_agent,
 from app.services.interview_service import interview_service
 from app.services.resume_service import resume_service
 from app.services.training_target_service import training_target_service
+from app.services.progress_service import progress_service
 
 
 
@@ -310,6 +311,11 @@ def complete_interview(
         db=db,
         session=session,
         report=report,
+    )
+
+    progress_service.update_progress_for_user(
+        db=db,
+        user_id=current_user.id,
     )
 
     return InterviewCompletionResponse(
