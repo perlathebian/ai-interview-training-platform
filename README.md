@@ -2,35 +2,50 @@
 
 ## Overview
 
-AI Interview Training Platform is an AI-powered interview coaching system designed to help software engineering, AI, machine learning, and backend candidates prepare for modern hiring processes.
+AI Interview Training Platform is a production-oriented interview preparation application that helps candidates practice interviews, receive structured AI feedback, improve their answers, and track progress over time.
 
-The platform focuses on helping users succeed in:
+The platform uses resume context, job target context, adaptive questioning, evaluation, coaching, reporting, and progress tracking to create a personalized interview preparation experience.
 
-- AI screening interviews
-- Technical interviews
-- Behavioral interviews
-- Company-specific interview processes
-
-Unlike traditional mock interview tools, the system aims to function as a personalized interview coach that identifies weaknesses, tracks progress, and adapts future interview sessions based on performance.
+This project is being built as a full-stack software engineering and AI systems project with an emphasis on clean architecture, testing, database design, CI/CD, and production readiness.
 
 ---
 
 ## Current Status
 
-🚧 Active Development
+Week 1 MVP Foundation Completed
 
-### Day 1 Completed
+### Implemented Features
 
-- FastAPI backend initialized
-- React + TypeScript frontend initialized
-- PostgreSQL containerized setup
-- Docker Compose local development environment
-- API health endpoint
-- Frontend routing foundation
+- User registration and login
+- JWT authentication
+- Protected routes
+- Resume management
+- Training target management
+- Interview session creation
+- Adaptive interview flow
+- Answer submission
+- AI evaluation layer
+- AI coaching layer
+- Interview reports
+- Session history
+- User progress tracking
+- PostgreSQL persistence
+- Docker support
+- GitHub Actions CI
 
 ---
 
 ## Tech Stack
+
+### Backend
+
+- FastAPI
+- SQLAlchemy
+- Alembic
+- PostgreSQL
+- JWT Authentication
+- Pydantic
+- Pytest
 
 ### Frontend
 
@@ -40,51 +55,59 @@ Unlike traditional mock interview tools, the system aims to function as a person
 - React Router
 - Axios
 
-### Backend
-
-- FastAPI
-- Pydantic
-- SQLAlchemy
-- Alembic
-
-### Database
-
-- PostgreSQL
-
 ### Infrastructure
 
 - Docker
-- Docker Compose
+- GitHub Actions
 
-### AI
+### AI Layer
 
-- Groq API (planned)
-- Multi-agent interview architecture (planned)
+- Groq (planned production integration)
+- Multi-agent architecture
 
 ---
 
 ## Architecture
 
-```text
-Frontend (React)
+### Frontend
 
-        ↓
+React application responsible for:
 
-Backend API (FastAPI)
+- Authentication
+- Resume management
+- Training targets
+- Interview experience
+- Reports
+- Progress visualization
 
-        ↓
+### Backend
 
-PostgreSQL
+FastAPI service responsible for:
 
-        ↓
+- Authentication
+- Business logic
+- Interview orchestration
+- Agent execution
+- Reporting
+- Progress tracking
 
-AI Agent Layer
-```
+### Database
 
-### Planned Agent Architecture
+PostgreSQL stores:
+
+- Users
+- Resumes
+- Training targets
+- Interview sessions
+- Interview turns
+- Progress data
+
+### Agent Layer
+
+The interview system is organized around specialized agents:
 
 - Research Agent
-- Interview Planner Agent
+- Planner Agent
 - Interviewer Agent
 - Evaluator Agent
 - Coach Agent
@@ -92,82 +115,75 @@ AI Agent Layer
 
 ---
 
-## Planned Features
+## Project Structure
 
-### Authentication
+```text
+backend/
+frontend/
+docs/
 
-- User registration
-- Login
-- JWT authentication
-- Account management
+backend/app/
+├── api/
+├── core/
+├── db/
+├── models/
+├── schemas/
+├── services/
+│   └── agents/
+├── tests/
 
-### Interview Engine
-
-- Adaptive text interviews
-- Voice interviews
-- Video interview simulation
-- Follow-up questioning
-- Personalized difficulty adjustment
-
-### Context Awareness
-
-- Resume analysis
-- Job description analysis
-- Company-specific preparation
-- Target role preparation
-
-### Evaluation & Coaching
-
-- Technical evaluation
-- Behavioral evaluation
-- STAR evaluation
-- Communication feedback
-- Progress tracking
-
-### Reporting
-
-- Session reports
-- Interview history
-- Performance analytics
-- PDF export
-
-### Monetization
-
-- Credit system
-- Lemon Squeezy integration
-- Stripe migration
+frontend/src/
+├── api/
+├── pages/
+├── components/
+├── routes/
+```
 
 ---
 
-## Local Development
-
-### Prerequisites
-
-- Python 3.11+
-- Node.js 22+
-- Docker Desktop
-
-### Run with Docker
-
-```bash
-docker compose up --build
-```
+## Local Development Setup
 
 ### Backend
 
-Health Check:
+```bash
+cd backend
 
-```text
-http://localhost:8000/health
+python -m venv .venv
+
+source .venv/Scripts/activate
+
+pip install -r requirements.txt
+
+alembic upgrade head
+
+uvicorn app.main:app --reload
 ```
 
-Swagger Documentation:
+Backend available at:
+
+```text
+http://localhost:8000
+```
+
+Swagger:
 
 ```text
 http://localhost:8000/docs
 ```
 
+---
+
 ### Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+Frontend available at:
 
 ```text
 http://localhost:5173
@@ -175,50 +191,86 @@ http://localhost:5173
 
 ---
 
-## Project Roadmap
+### Docker
 
-### Week 1
+```bash
+docker compose up --build
+```
 
-- Project setup
-- Database design
-- Authentication
-- Resume management
-- Training targets
-- Interview session foundation
+---
+
+## Testing
+
+### Backend
+
+```bash
+pytest
+```
+
+### Frontend
+
+```bash
+npm run build
+
+npm run test
+```
+
+---
+
+## Continuous Integration
+
+GitHub Actions automatically runs:
+
+### Backend CI
+
+- Dependency installation
+- PostgreSQL service
+- Database migrations
+- Pytest
+
+### Frontend CI
+
+- Dependency installation
+- Production build
+- Test execution
+
+---
+
+## Roadmap
 
 ### Week 2
 
-- Interview evaluation engine
-- Coaching engine
-- Session history
-- Progress tracking
-- Reporting
+- Real Groq integration
+- Resume-aware interviews
+- Job-description-aware interviews
+- Improved planner agent
+- Improved evaluator agent
+- Improved coach agent
+- Improved interviewer agent
+- Improved personalization
 
 ### Week 3
 
+- Voice interviews
+- Video interviews
+- Payments
 - Deployment
-- Testing
-- Monetization
+- Production monitoring
 - Launch preparation
 
 ---
 
-## Development Philosophy
+## Goals
 
-Prioritize:
+This project is designed to demonstrate:
 
-- User value
-- Reliability
-- Personalization
-- Adaptivity
-- Resume value
-- Real-world engineering practices
+- Backend engineering
+- Frontend engineering
+- Database design
+- API development
+- AI system integration
+- Software architecture
+- CI/CD practices
+- Production-oriented development
 
-Avoid:
-
-- Premature optimization
-- Overengineering
-- Unnecessary complexity
-- Academic-only solutions
-
----
+while delivering a real product that users can use to improve interview performance.
