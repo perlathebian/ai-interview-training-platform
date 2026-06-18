@@ -4,6 +4,7 @@ from app.models.interview_turn import InterviewTurn
 from app.models.resume import Resume
 from app.models.training_target import TrainingTarget
 from app.models.user import User
+from .user_progress import UserProgress
 
 __all__ = [
     "CreditTransaction",
@@ -12,4 +13,5 @@ __all__ = [
     "Resume",
     "TrainingTarget",
     "User",
+    "UserProgress",
 ]

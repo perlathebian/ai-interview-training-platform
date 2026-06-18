@@ -43,3 +43,9 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+
+    progress = relationship(
+        "UserProgress",
+        back_populates="user",
+        uselist=False,
+    )

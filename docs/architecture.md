@@ -1,71 +1,57 @@
 # Architecture
 
-## System Overview
+## High-Level Flow
 
-The application follows a clean full-stack architecture:
+```text
+React Frontend
+       |
+       v
+FastAPI Backend
+       |
+       v
+PostgreSQL
 
-Frontend → Backend API → PostgreSQL → AI Services
+       |
+       v
 
-## Frontend
+Agent Layer
+├── Research Agent
+├── Planner Agent
+├── Interviewer Agent
+├── Evaluator Agent
+├── Coach Agent
+└── Report Agent
+```
 
-The frontend is built with React, TypeScript, Vite, and Tailwind CSS.
+## Backend Layers
 
-It handles:
+```text
+API Layer
+    |
+Service Layer
+    |
+Agent Layer
+    |
+Database Layer
+```
 
-- authentication UI
-- dashboard
-- interview flow
-- reports
-- progress views
+## Core Entities
 
-## Backend
+- Users
+- Resumes
+- Training Targets
+- Interview Sessions
+- Interview Turns
+- User Progress
 
-The backend is built with FastAPI.
+## Infrastructure
 
-It handles:
+- Docker
+- GitHub Actions
+- PostgreSQL
+- FastAPI
+- React
 
-- authentication
-- authorization
-- interview sessions
-- AI agent orchestration
-- database access
-- credit logic
-- reports
+```
 
-## Database
-
-PostgreSQL stores all important application state.
-
-FastAPI remains stateless.
-
-## AI Services
-
-The AI layer uses specialized agents:
-
-- Research Agent
-- Planner Agent
-- Interviewer Agent
-- Evaluator Agent
-- Coach Agent
-- Report Agent
-
-Each agent should return structured JSON validated by Pydantic.
-
-# Development Stage
-
-Current Phase:
-
-Week 1 - Foundation
-
-Implemented:
-
-- FastAPI backend
-- React frontend
-- PostgreSQL container
-- Docker Compose environment
-
-Next:
-
-- Authentication
-- Database models
-- Interview engine
+```

@@ -31,6 +31,10 @@ export default function DashboardPage() {
         <Link to="/resume">Manage Resume</Link>
         {" | "}
         <Link to="/training-targets">Training Targets</Link>
+        {" | "}
+        <Link to="/interviews/new">Start Interview</Link>
+        {" | "}
+        <Link to="/interviews/history">Interview History</Link>
       </nav>
 
       <button onClick={handleLogout}>Logout</button>

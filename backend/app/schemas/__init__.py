@@ -1,8 +1,11 @@
 from app.schemas.interview import (
     InterviewSessionCreate,
     InterviewSessionResponse,
+    InterviewStartResponse,
     InterviewTurnCreate,
     InterviewTurnResponse,
+    InterviewSessionDetailResponse,
+    InterviewTurnDetailResponse,
 )
 from app.schemas.resume import (
     ResumeCreate,

@@ -5,6 +5,7 @@ from app.api.auth import router as auth_router
 from app.core.config import settings
 from app.api.resumes import router as resumes_router
 from app.api.training_targets import router as training_targets_router
+from app.api.interviews import router as interviews_router
 
 
 app = FastAPI(
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(resumes_router)
 app.include_router(training_targets_router)
+app.include_router(interviews_router)
 
 @app.get("/")
 def root():
